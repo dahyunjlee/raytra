@@ -14,6 +14,8 @@ public:
     Ray() {}
     Ray(const Ray& r)
         : o(r.o), d(r.d) {}
+    Ray(const Point& p, const Vector& v)
+        : o(p), d(v) {}
 
     Ray& operator=(const Ray& r) {
         o = r.o; d = r.d; return *this; }
@@ -23,6 +25,6 @@ public:
     Point o;
     Vector d;
 
-}
+};
 
 #endif

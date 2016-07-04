@@ -55,11 +55,24 @@ public:
 
     // Cross and Dot Products
     //
-    Vector cross(const Vector& u, const Vector& v) {
+    friend Vector cross(const Vector& u, const Vector& v) {
         return Vector(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x); }
 
-    double dot(const Vector& u, const Vector& v) {
-        return (
+    friend double dot(const Vector& u, const Vector& v) {
+        return (u.x*v.x + u.y*v.y + u.z*v.z); }
+
+    // Other Functions
+    //
+    double length() const {
+        return sqrtf (x*x + y*y + z*z); }
+
+    // normalizes function
+    Vector& normalize() {
+        assert (! (x==0. && y==0. && z==0.));
+        double l = this->length();
+        x/=l; y/=l; z/=l;
+        return *this; 
+    }
 
 
     // Vector public data
@@ -85,13 +98,43 @@ public:
 
     // Arithmetic Operators
     //
+    Vector operator-(const Point& p) const {
+        return Vector(x - p.x, y - p.y, z - p.z); }
 
+    Point operator-(const Vector& v) const {
+        return Point(x - v.x, y - v.y, z - v.z); }
 
+    Point& operator-=(const Vector& v) {
+        x -= v.x; y -= v.y; z -= v.z;
+        return *this;
+    }
+
+    Point operator+(const Point& p) const {
+        return Point(x + p.x, y + p.y, z + p.z); }
+
+    Point operator+(const Vector& v) const {
+        return Point(x + v.x, y + v.y, z + v.z); }
+
+    friend Point operator+(const Vector& v, const Point& p) {
+        return Point(v.x + p.x, v.y + p.y, v.z + p.z); }
+
+    Point& operator+=(const Point& p) {
+        x += p.x; y += p.y; z += p.z;
+        return *this;
+    }
+
+    Point& operator+=(const Vector& v) {
+        x += v.x; y += v.y; z += v.z;
+        return *this;
+    }
+
+    friend double dot(const Point& p, const Vector& v) {
+        return (p.x*v.x + p.y*v.y + p.z* v.z); }
 
     // Point public data
     //
     double x, y, z;
 
-}
+};
 
 #endif

@@ -11,9 +11,10 @@
 #include <fstream>
 #include <string>
 
+#include "camera.h"
 #include "surface.h"
-#include "light.h"
-#include "material.h"
+//#include "light.h"
+//#include "material.h"
 
 
 class Parser {
@@ -21,10 +22,10 @@ public:
     void parse(
             const char *file,
             std::vector<Surface *>& surfaces,
-            std::vector<Light *>& lights,
-            std::vector<Material *>& materials,
+//            std::vector<Light *>& lights,
+//            std::vector<Material *>& materials,
             Camera& cam);
 
-}
+};
 
 #endif

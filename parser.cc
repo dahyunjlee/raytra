@@ -9,8 +9,8 @@ using namespace std;
 void Parser::parse(
         const char *file,
         std::vector<Surface *>& surfaces,
-        std::vector<Light *>& lights,
-        std::vector<Material *>& materials,
+//        std::vector<Light *>& lights,
+//        std::vector<Material *>& materials,
         Camera& cam)
 {
     ifstream inFile(file);
@@ -45,6 +45,7 @@ void Parser::parse(
 
             double x, y, z, r;
             iss >> x >> y >> z >> r;
+            surfaces.push_back(new Sphere(Point(x, y, z), r));
 
         }
         else if (cmd=="c") {
@@ -54,7 +55,7 @@ void Parser::parse(
             iss >> ex >> ey >> ez >> vx >> vy >> vz >> d;
             iss >> iw >> ih >> pw >> ph;
 
-            num_cams++;
+            cam.init(Point(ex, ey, ez), Vector(vx, vy, vz), d, iw, ih, pw, ph);
         }
     }
 }
