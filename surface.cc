@@ -14,7 +14,7 @@ bool Sphere::intersect(const Ray& ray, Intersection& it) {
     double dis_1 = dot(ray.d, v);
     dis_1 *= dis_1;
     
-    double dis_2 = dot(ray.d, v);
+    double dis_2 = dot(v, v) - (this->r * this->r);
     dis_2 *= d_dot_d;
 
     double dis = dis_1 - dis_2;

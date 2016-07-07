@@ -14,7 +14,7 @@ void Parser::parse(
         Camera& cam)
 {
     ifstream inFile(file);
-    char buffer[1025];
+    char buffer[4096];
     string cmd;
 
     int num_cams = 0;
@@ -42,6 +42,7 @@ void Parser::parse(
         }
         else if (cmd=="s") {
             // got a sphere
+            cout<<"Got a Sphere"<<endl;
 
             double x, y, z, r;
             iss >> x >> y >> z >> r;
@@ -50,8 +51,10 @@ void Parser::parse(
         }
         else if (cmd=="c") {
             // got a camera
+            cout<<"Got a Camera"<<endl;
+
             double ex, ey, ez, vx, vy, vz, d;
-            int iw, ih, pw, ph;
+            double iw, ih, pw, ph;
             iss >> ex >> ey >> ez >> vx >> vy >> vz >> d;
             iss >> iw >> ih >> pw >> ph;
 

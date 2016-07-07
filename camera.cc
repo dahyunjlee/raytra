@@ -28,6 +28,17 @@ void Camera::init (Point pos, Vector dir, double d,
     u.normalize();
     v.normalize();
 
+    // set up image
+    try
+    {
+        pixelBuffer.resizeErase(pheight, pwidth);
+    }
+    catch (const std::exception& exc) {
+        std::cerr << exc.what() << std::endl;
+        return;
+    }
+
+
 }
 
 // Generate ray for given pixel
@@ -53,19 +64,23 @@ Ray Camera::generateRay (const double i, const double j)
 void Camera::renderScene (std::vector<Surface *>& surfaces)
 {
     std::cout << "rendering" << std::endl;
+    std::cout << surfaces.size() << std::endl;
 
     Vector rgb(0., 0., 0.);
     for (int j = 0; j < pheight; ++j) {
         for (int i = 0; i < pwidth; ++i) {
             Ray ray = generateRay(i, j);
-            Intersection it;
+            Intersection foundIntersection;
+
             for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
                 Surface *surf = surfaces[surfnum];
                 Intersection i;
                 if (surf->intersect(ray, i)) {
-                    if (i.t > 0.0001 && i.t < it.t)
-                        it = i;
+                    if (i.t > 0.0001 && i.t < foundIntersection.t)
+                        foundIntersection = i;
                     rgb.x = 1;
+                } else {
+                    rgb.x = rgb.y = rgb.z = 0;
                 }
             }
             setPixel (i, j, rgb.x, rgb.y, rgb.z);
@@ -75,6 +90,7 @@ void Camera::renderScene (std::vector<Surface *>& surfaces)
 
 void Camera::writeImage (const char *sceneFile)
 {
+    std::cout<<"write image"<<std::endl;
     //EXR
     try
     {
