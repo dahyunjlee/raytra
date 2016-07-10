@@ -30,4 +30,25 @@ private:
     
 };
 
+class Triangle : public Surface {
+
+public:
+    Triangle (Point p_1, Point p_2, Point p_3)
+        :p1(p_1), p2(p_2), p3(p_3)
+    {
+        Vector u = p2 - p1;
+        Vector v = p3 - p1;
+        norm = cross(u, v);
+    }
+
+    virtual bool intersect (const Ray& ray, Intersection& it);
+
+private:
+    Point p1, p2, p3;
+    double u, v, w; // barycentric coordinates
+    Vector norm;
+
+};
+
+
 #endif

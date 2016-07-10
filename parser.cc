@@ -14,7 +14,7 @@ void Parser::parse(
         Camera& cam)
 {
     ifstream inFile(file);
-    char buffer[4096];
+    char buffer[1025];
     string cmd;
 
     int num_cams = 0;
@@ -49,9 +49,22 @@ void Parser::parse(
             surfaces.push_back(new Sphere(Point(x, y, z), r));
 
         }
+        else if (cmd=="t") {
+            // got a triangle
+            cout<<"Got a Triangle"<<endl;
+
+            double x1, y1, z1, x2, y2, z2, x3, y3, z3;
+            iss >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
+            Point p1(x1, y1, z1);
+            Point p2(x2, y2, z2);
+            Point p3(x3, y3, z3);
+            surfaces.push_back(new Triangle(p1, p2, p3));
+
+        }
         else if (cmd=="c") {
             // got a camera
             cout<<"Got a Camera"<<endl;
+            num_cams++;
 
             double ex, ey, ez, vx, vy, vz, d;
             double iw, ih, pw, ph;
@@ -60,6 +73,11 @@ void Parser::parse(
 
             cam.init(Point(ex, ey, ez), Vector(vx, vy, vz), d, iw, ih, pw, ph);
         }
+    }
+
+    if (num_cams != 1) {
+        cerr << "There must be only one camera." << endl;
+        exit (-1);
     }
 }
 
