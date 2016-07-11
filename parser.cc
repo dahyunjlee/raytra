@@ -10,7 +10,7 @@ void Parser::parse(
         const char *file,
         std::vector<Surface *>& surfaces,
 //        std::vector<Light *>& lights,
-//        std::vector<Material *>& materials,
+        std::vector<Material *>& materials,
         Camera& cam)
 {
     ifstream inFile(file);
@@ -24,11 +24,13 @@ void Parser::parse(
         exit (-1);
     }
 
-    //Material *lastMaterialLoaded = 0;
+    Material *lastMaterialLoaded = 0;
     
     for (int line=1; inFile.good(); line++) {
         inFile.getline(buffer, 1024);
         buffer[inFile.gcount()]=0;
+
+        Surface *thisSurface = 0;
 
         cmd = "";
 
@@ -46,7 +48,7 @@ void Parser::parse(
 
             double x, y, z, r;
             iss >> x >> y >> z >> r;
-            surfaces.push_back(new Sphere(Point(x, y, z), r));
+            thisSurface = new Sphere(Point(x, y, z), r);
 
         }
         else if (cmd=="t") {
@@ -58,7 +60,7 @@ void Parser::parse(
             Point p1(x1, y1, z1);
             Point p2(x2, y2, z2);
             Point p3(x3, y3, z3);
-            surfaces.push_back(new Triangle(p1, p2, p3));
+            thisSurface = new Triangle(p1, p2, p3);
 
         }
         else if (cmd=="c") {
@@ -73,6 +75,18 @@ void Parser::parse(
 
             cam.init(Point(ex, ey, ez), Vector(vx, vy, vz), d, iw, ih, pw, ph);
         }
+        else if (cmd=="m") {
+            // got a material
+            double dr, dg, db, sr, sg, sb, pe, ir, ig, ib;
+            iss >> dr >> dg >> db >> sr >> sg >> sb >> pe >> ir >> ig >> ib;
+            lastMaterialLoaded = new Material (dr, dg, db, sr, sg, sb, pe, ir, ig, ib);
+            materials.push_back (lastMaterialLoaded);
+        }
+     
+        if (thisSurface)
+            surfaces.push_back(thisSurface);
+        if (lastMaterialLoaded && thisSurface)
+            thisSurface->setMaterial(lastMaterialLoaded);
     }
 
     if (num_cams != 1) {

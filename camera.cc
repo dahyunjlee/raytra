@@ -64,11 +64,13 @@ Ray Camera::generateRay (const double i, const double j)
 void Camera::renderScene (std::vector<Surface *>& surfaces)
 {
     std::cout << "rendering" << std::endl;
-    std::cout << surfaces.size() << std::endl;
 
     Vector rgb(0., 0., 0.);
+    // for every pixel
     for (int j = 0; j < pheight; ++j) {
         for (int i = 0; i < pwidth; ++i) {
+
+            // color calculations
             Ray ray = generateRay(i, j);
             Intersection foundIntersection;
 

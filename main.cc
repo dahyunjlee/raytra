@@ -22,9 +22,10 @@ int main (int argc, const char** argv)
     }
 
     vector<Surface *>surfaces;
+    vector<Material *>materials;
     Camera cam;
     Parser parser;
-    parser.parse (argv[1], surfaces, cam);
+    parser.parse (argv[1], surfaces, materials, cam);
 
     cam.renderScene(surfaces);
     cam.writeImage(argv[2]);

@@ -7,11 +7,19 @@
 
 #include "ray.h"
 #include "intersection.h"
+#include "material.h"
 
 class Surface {
 
 public:
     virtual bool intersect (const Ray& ray, Intersection&) {return false;}
+    virtual ~Surface() {};
+
+    void setMaterial (Material* m) {
+        material = m;
+    }
+
+    Material* material;
 
 };
 
@@ -21,6 +29,8 @@ public:
     Sphere (Point oo, double rr) : o(oo), r(rr) {}
     Sphere (double x, double y, double z, double rr)
         : o(x, y, z), r(rr) {}
+    
+    virtual ~Sphere() {}
 
     virtual bool intersect (const Ray& ray, Intersection& it);
 
@@ -40,6 +50,7 @@ public:
         Vector v = p3 - p1;
         norm = cross(u, v);
     }
+    virtual ~Triangle() {}
 
     virtual bool intersect (const Ray& ray, Intersection& it);
 

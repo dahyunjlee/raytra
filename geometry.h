@@ -53,6 +53,9 @@ public:
     friend Vector operator*(double d, const Vector& v) {
         return Vector(v.x * d, v.y * d, v.z * d); }
 
+    double& operator[] (const int i);
+    double operator[] (const int i) const;
+
     // Cross and Dot Products
     //
     friend Vector cross(const Vector& u, const Vector& v) {
@@ -80,6 +83,28 @@ public:
     double x, y, z;
 
 };
+
+inline double& Vector::operator[] (const int i) 
+{
+    assert (i >= 0 && i < 3);
+    if (i == 0)
+        return x;
+    if (i == 1)
+        return y;
+    else
+        return z;
+}
+
+inline double Vector::operator[] (const int i) const
+{
+    assert (i >= 0 && i < 3);
+    if (i == 0)
+        return x;
+    if (i == 1)
+        return y;
+    else
+        return z;
+}
 
 class Point {
 
@@ -128,6 +153,9 @@ public:
         return *this;
     }
 
+    double& operator[] (const int i);
+    double operator[] (const int i) const;
+
     friend double dot(const Point& p, const Vector& v) {
         return (p.x*v.x + p.y*v.y + p.z* v.z); }
 
@@ -136,5 +164,27 @@ public:
     double x, y, z;
 
 };
+
+inline double& Point::operator[] (const int i)
+{
+    assert (i >= 0 && i < 3);
+    if (i == 0)
+        return x;
+    if (i == 1)
+        return y;
+    else 
+        return z;
+}
+
+inline double Point::operator[] (const int i) const
+{
+    assert (i >= 0 && i < 3);
+    if (i == 0)
+        return x;
+    if (i == 1)
+        return y;
+    else
+        return z;
+}
 
 #endif
