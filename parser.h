@@ -22,7 +22,7 @@ public:
     void parse(
             const char *file,
             std::vector<Surface *>& surfaces,
-//            std::vector<Light *>& lights,
+            std::vector<Light *>& lights,
             std::vector<Material *>& materials,
             Camera& cam);
 

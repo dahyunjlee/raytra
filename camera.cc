@@ -61,30 +61,68 @@ Ray Camera::generateRay (const double i, const double j)
     return ray;
 }
 
-void Camera::renderScene (std::vector<Surface *>& surfaces)
+// Color calculations for given pixel
+//
+Vector Camera::setColor (Ray& ray, Light* light, Intersection& it, Surface* s)
+{
+    Vector l = (dynamic_cast<PLight*>(light)->pos - it.p).normalize();
+    Vector v = (-1.0 * ray.d).normalize();
+    Vector h = (v + l).normalize();
+
+    float phong = s->material->phongE;
+
+    double max1 = fmax(0., dot(it.n, l));
+    double max2 = pow(fmax(0., dot(it.n, h)), phong);
+
+    float r = (s -> material->diffuse[0]) * max1
+            + (s -> material->specular[0]) * max2;
+    float g = (s -> material->diffuse[1]) * max1
+            + (s -> material->specular[1]) * max2;
+    float b = (s -> material->diffuse[2]) * max1
+            + (s -> material->specular[2]) * max2;
+
+    return Vector(r, g, b);
+}
+
+// Iterate through each pixel
+//
+void Camera::renderScene (std::vector<Light *>& lights,
+                          std::vector<Surface *>& surfaces)
 {
     std::cout << "rendering" << std::endl;
 
+    // only one light for now
+    Light* light = lights[0];
     Vector rgb(0., 0., 0.);
+    bool itfound;
+    
     // for every pixel
     for (int j = 0; j < pheight; ++j) {
         for (int i = 0; i < pwidth; ++i) {
+            itfound = false;
 
             // color calculations
             Ray ray = generateRay(i, j);
             Intersection foundIntersection;
+            Surface *foundSurf;
 
             for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
                 Surface *surf = surfaces[surfnum];
                 Intersection i;
                 if (surf->intersect(ray, i)) {
-                    if (i.t > 0.0001 && i.t < foundIntersection.t)
+                    itfound = true;
+                    if (i.t > 0.0001 && i.t < foundIntersection.t) {
                         foundIntersection = i;
-                    rgb.x = 1;
-                } else {
-                    rgb.x = rgb.y = rgb.z = 0;
+                        foundSurf = surf;
+                    }
                 }
             }
+            if (itfound)
+                rgb = setColor (ray, light, foundIntersection, foundSurf);
+            else 
+                // default color
+                rgb.x = rgb.y = rgb.z = 0;
+
             setPixel (i, j, rgb.x, rgb.y, rgb.z);
         }
     }

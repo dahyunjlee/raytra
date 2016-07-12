@@ -9,7 +9,7 @@ using namespace std;
 void Parser::parse(
         const char *file,
         std::vector<Surface *>& surfaces,
-//        std::vector<Light *>& lights,
+        std::vector<Light *>& lights,
         std::vector<Material *>& materials,
         Camera& cam)
 {
@@ -81,6 +81,18 @@ void Parser::parse(
             iss >> dr >> dg >> db >> sr >> sg >> sb >> pe >> ir >> ig >> ib;
             lastMaterialLoaded = new Material (dr, dg, db, sr, sg, sb, pe, ir, ig, ib);
             materials.push_back (lastMaterialLoaded);
+        }
+
+        else if (cmd=="l") {
+            // got a light
+
+            iss >> cmd;
+            if (cmd=="p") {
+                //point light
+                double posx, posy, posz, r, g, b;
+                iss >> posx >> posy >> posz >> r >> g >> b;
+                lights.push_back (new PLight (Point(posx, posy, posz), r, g, b));
+            }
         }
      
         if (thisSurface)

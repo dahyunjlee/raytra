@@ -23,11 +23,12 @@ int main (int argc, const char** argv)
 
     vector<Surface *>surfaces;
     vector<Material *>materials;
+    vector<Light *>lights;
     Camera cam;
     Parser parser;
-    parser.parse (argv[1], surfaces, materials, cam);
+    parser.parse (argv[1], surfaces, lights, materials, cam);
 
-    cam.renderScene(surfaces);
+    cam.renderScene(lights, surfaces);
     cam.writeImage(argv[2]);
 
     double duration = (clock()-start) / (double) CLOCKS_PER_SEC;
