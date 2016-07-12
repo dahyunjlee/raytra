@@ -56,7 +56,8 @@ public:
 
 private:
     Point p1, p2, p3;
-    double u, v, w; // barycentric coordinates
+//    double u, v, w; // barycentric coordinates
+//    for intersection...
     Vector norm;
 
 };

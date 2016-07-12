@@ -41,14 +41,15 @@ bool Triangle::intersect(const Ray& ray, Intersection& it) {
 
     Point o = ray.o;
     Vector d = ray.d;
+    Vector n = norm.normalize();
 
     // if plane and ray are parallel
-    double d_dot_n = dot(d, norm);
+    double d_dot_n = dot(d, n);
     if (d_dot_n == 0)
         return false;
 
     // Distance from ray origin to plane
-    double t = dot(p1-o, norm)/d_dot_n;
+    double t = dot(p1-o, n)/d_dot_n;
     
     // if triangle is behind ray
     if (t < 0) 
@@ -61,21 +62,26 @@ bool Triangle::intersect(const Ray& ray, Intersection& it) {
     // Vector perpendicular to triangle plane (!normal)
     Vector c; 
     c = cross(p2-p1, p-p1);
-    if (dot (c, norm) < 0)
+    if (dot (c, n) < 0)
         return false;
 
     c = cross(p3-p2, p-p2);
-    if ((u = dot(c, norm)) < 0)
+//    if ((u = dot(c, n)) < 0)
+    if ((dot(c, n)) <= 0)
         return false;
 
     c = cross(p1-p3, p-p3);
-    if ((v = dot(c, norm)) < 0)
+//    if ((v = dot(c, n)) < 0)
+    if ((dot(c, n)) <= 0)
         return false;
 
-    u /= area;
-    v /= area;
-    w = 1 - u - v;
+//    u /= area;
+//    v /= area;
+//    w = 1 - u - v;
 
+    it.t = t;
+    it.p = p;
+    it.n = n;
     return true;
 
 }
