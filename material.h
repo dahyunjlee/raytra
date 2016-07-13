@@ -35,6 +35,9 @@ public:
         return *this;
     }
 
+    Vector phongShading(const Vector& l, const Vector& v, 
+                        const Vector& n, Vector& color) const;
+
 
     // Material data
     Vector diffuse;

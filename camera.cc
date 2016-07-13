@@ -63,25 +63,65 @@ Ray Camera::generateRay (const double i, const double j)
 
 // Color calculations for given pixel
 //
-Vector Camera::setColor (Ray& ray, Light* light, Intersection& it, Surface* s)
+Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
+                         std::vector<Surface *>& surfaces) 
+
 {
-    Vector l = (dynamic_cast<PLight*>(light)->pos - it.p).normalize();
-    Vector v = (-1.0 * ray.d).normalize();
-    Vector h = (v + l).normalize();
+    Vector rgb(0., 0., 0.);
+    Intersection it;
+    Material *m = NULL;
 
-    float phong = s->material->phongE;
+    // iterate through each surface for intersection
+    for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
+        Intersection i;
+        Surface *surf = surfaces[surfnum];
+        if (surf->intersect(ray, i)) {
+            if (i.t > 0.0001 && i.t < it.t) {
+                it = i;
+                m = surf->material;
+            }
+        }
+    }
+    if (m) {
+        // Intersection info
+        Point p = it.p;
+        Vector n = it.n;
 
-    double max1 = fmax(0., dot(it.n, l));
-    double max2 = pow(fmax(0., dot(it.n, h)), phong);
+        // direction back toward camera
+        Vector v = (-1.0 * ray.d).normalize();
 
-    float r = (s -> material->diffuse[0]) * max1
-            + (s -> material->specular[0]) * max2;
-    float g = (s -> material->diffuse[1]) * max1
-            + (s -> material->specular[1]) * max2;
-    float b = (s -> material->diffuse[2]) * max1
-            + (s -> material->specular[2]) * max2;
+        // iterate through each light
+        for (int lnum = 0; lnum < lights.size(); ++lnum) {
+            Light *light = lights[lnum];
 
-    return Vector(r, g, b);
+            // if point light
+            if (light->type == 1) {
+
+                Vector l = (dynamic_cast<PLight*>(light)->pos - p);
+                double dist = l.length();
+                l.normalize();
+
+                // cast Shadow ray
+                Ray shadowRay = Ray(p, l);
+                bool isShadow = false;
+
+                for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
+                    Intersection i;
+                    Surface *s = surfaces[surfnum];
+                    if (s->intersect(shadowRay, i)) {
+                        if (i.t > 0.0001 && i.t < dist) 
+                            isShadow = true;
+                    }
+                }
+
+                if (!isShadow)
+                    rgb += m -> phongShading (l, v, n, light->color);
+
+            }
+        }
+    }
+
+    return rgb;
 }
 
 // Iterate through each pixel
@@ -94,34 +134,14 @@ void Camera::renderScene (std::vector<Light *>& lights,
     // only one light for now
     Light* light = lights[0];
     Vector rgb(0., 0., 0.);
-    bool itfound;
     
     // for every pixel
     for (int j = 0; j < pheight; ++j) {
         for (int i = 0; i < pwidth; ++i) {
-            itfound = false;
 
             // color calculations
             Ray ray = generateRay(i, j);
-            Intersection foundIntersection;
-            Surface *foundSurf;
-
-            for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
-                Surface *surf = surfaces[surfnum];
-                Intersection i;
-                if (surf->intersect(ray, i)) {
-                    itfound = true;
-                    if (i.t > 0.0001 && i.t < foundIntersection.t) {
-                        foundIntersection = i;
-                        foundSurf = surf;
-                    }
-                }
-            }
-            if (itfound)
-                rgb = setColor (ray, light, foundIntersection, foundSurf);
-            else 
-                // default color
-                rgb.x = rgb.y = rgb.z = 0;
+            rgb = setColor (ray, lights, surfaces);
 
             setPixel (i, j, rgb.x, rgb.y, rgb.z);
         }
