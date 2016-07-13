@@ -10,12 +10,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 #include "camera.h"
-#include "surface.h"
-//#include "light.h"
-#include "material.h"
 
+using namespace std;
 
 class Parser {
 public:
@@ -25,6 +24,9 @@ public:
             std::vector<Light *>& lights,
             std::vector<Material *>& materials,
             Camera& cam);
+
+    void read_wavefront_file (const char *file, std::vector<int>& tris,
+                              std::vector<float>& verts);
 
 };
 

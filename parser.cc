@@ -31,6 +31,7 @@ void Parser::parse(
         buffer[inFile.gcount()]=0;
 
         Surface *thisSurface = 0;
+        Light *thisLight = 0;
 
         cmd = "";
 
@@ -91,7 +92,38 @@ void Parser::parse(
                 //point light
                 double posx, posy, posz, r, g, b;
                 iss >> posx >> posy >> posz >> r >> g >> b;
-                lights.push_back (new PLight (Point(posx, posy, posz), r, g, b));
+                thisLight = new PLight (Point(posx, posy, posz), r, g, b);
+            }
+            if (cmd=="a") {
+            }
+        }
+        else if (cmd=="w") {
+            //read obj file
+            Surface *s;
+
+            iss >> cmd;
+            //string aw_file = cmd.substr(2, string::npos);
+            vector<int> tri_ids;
+            vector<float> tri_verts;
+           // read_wavefront_file(aw_file.c_str(), tri_ids, tri_verts);
+            read_wavefront_file(cmd.c_str(), tri_ids, tri_verts);
+
+            for (int k = 0; k < tri_ids.size() / 3; ++k) {
+                Point pa(tri_verts[3*tri_ids[3*k]],
+                         tri_verts[3*tri_ids[3*k]+1],
+                         tri_verts[3*tri_ids[3*k]+2]);
+
+                Point pb(tri_verts[3*tri_ids[3*k+1]],
+                         tri_verts[3*tri_ids[3*k+1]+1],
+                         tri_verts[3*tri_ids[3*k+1]+2]);
+
+                Point pc(tri_verts[3*tri_ids[3*k+2]],
+                         tri_verts[3*tri_ids[3*k+2]+1],
+                         tri_verts[3*tri_ids[3*k+2]+2]);
+                
+                s = new Triangle(pa, pb, pc);
+                s -> setMaterial (lastMaterialLoaded);
+                surfaces.push_back (s);
             }
         }
      
@@ -99,6 +131,8 @@ void Parser::parse(
             surfaces.push_back(thisSurface);
         if (lastMaterialLoaded && thisSurface)
             thisSurface->setMaterial(lastMaterialLoaded);
+        if (thisLight)
+            lights.push_back(thisLight);
     }
 
     if (num_cams != 1) {
@@ -107,4 +141,52 @@ void Parser::parse(
     }
 }
 
+void Parser::read_wavefront_file (
+                const char *file,
+                std::vector<int>& tris,
+                std::vector<float>& verts)
+{
+    cout << "reading obj file." << endl;
+    tris.clear();
+    verts.clear();
 
+    ifstream in(file);
+    char buffer[1025];
+    string cmd;
+
+    for (int line=1; in.good(); line++) {
+        in.getline(buffer, 1024);
+        buffer[in.gcount()] = 0;
+
+        cmd="";
+        istringstream iss (buffer);
+        iss >> cmd;
+
+        if (cmd[0]=='#' or cmd.empty()) {
+            continue;
+        }
+        else if (cmd=="v") {
+
+            double pa, pb, pc;
+            iss >> pa >> pb >> pc;
+            verts.push_back (pa);
+            verts.push_back (pb);
+            verts.push_back (pc);
+        }
+        else if (cmd=="f") {
+
+            int i, j, k;
+            iss >> i >> j >> k;
+            tris.push_back (i-1);
+            tris.push_back (j-1);
+            tris.push_back (k-1);
+        }
+        else
+            cerr << "Parser error: invalid command at line" << line << endl;
+    }
+    in.close();
+
+    cout << "found " << tris.size() / 3. << " tris, " << verts.size() / 3.
+         << " verts." << endl;
+
+}

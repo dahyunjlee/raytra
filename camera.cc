@@ -129,7 +129,10 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
 void Camera::renderScene (std::vector<Light *>& lights,
                           std::vector<Surface *>& surfaces)
 {
-    std::cout << "rendering" << std::endl;
+    std::cout << "rendering..." << std::endl;
+    int pixnum = pheight * pwidth;
+    pixnum /= 100
+    int n = 0;
 
     // only one light for now
     Light* light = lights[0];
@@ -138,6 +141,9 @@ void Camera::renderScene (std::vector<Light *>& lights,
     // for every pixel
     for (int j = 0; j < pheight; ++j) {
         for (int i = 0; i < pwidth; ++i) {
+            n++;
+            if ((n % pixnum) == 0)
+                std::cout << 10 * n / pixnum << "%" << std::endl;
 
             // color calculations
             Ray ray = generateRay(i, j);
