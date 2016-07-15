@@ -30,7 +30,7 @@ void Parser::parse(
         inFile.getline(buffer, 1024);
         buffer[inFile.gcount()]=0;
 
-        Surface *thisSurface = 0;
+    Surface *thisSurface = 0;
         Light *thisLight = 0;
 
         cmd = "";
@@ -64,6 +64,12 @@ void Parser::parse(
             thisSurface = new Triangle(p1, p2, p3);
 
         }
+        else if (cmd=="p") {
+            cout<<"Got a Plane"<<endl;
+            double x, y, z, d;
+            iss >> x >> y >> z >> d;
+            thisSurface = new Plane (x, y, z, d);
+        }
         else if (cmd=="c") {
             // got a camera
             cout<<"Got a Camera"<<endl;
@@ -76,6 +82,7 @@ void Parser::parse(
 
             cam.init(Point(ex, ey, ez), Vector(vx, vy, vz), d, iw, ih, pw, ph);
         }
+
         else if (cmd=="m") {
             // got a material
             double dr, dg, db, sr, sg, sb, pe, ir, ig, ib;

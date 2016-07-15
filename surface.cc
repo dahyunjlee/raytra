@@ -85,3 +85,19 @@ bool Triangle::intersect(const Ray& ray, Intersection& it) {
     return true;
 
 }
+
+bool Plane::intersect(const Ray& ray, Intersection& it) {
+
+    double d_n = dot(ray.d, n);
+    if (d_n == 0)
+        return false;
+
+    double t1 = -(dot(ray.o, n) + d) / d_n;
+    if (t1 > 0) {
+        it.t = t1;
+        it.p = ray.o + t1 * ray.d;
+        it.n = n;
+        return true;
+    }
+    return false;
+}

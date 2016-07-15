@@ -62,5 +62,23 @@ private:
 
 };
 
+class Plane : public Surface {
+
+public:
+    Plane (Vector v, double f)
+        : n(v), d(f) {}
+
+    Plane (double x, double y, double z, double f)
+        : n(x, y, z), d(f) {}
+
+    virtual ~Plane() {}
+    virtual bool intersect (const Ray& ray, Intersection& it);
+
+
+private:
+    Vector n;
+    double d;
+
+};
 
 #endif
