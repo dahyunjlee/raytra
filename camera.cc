@@ -4,6 +4,9 @@
 
 #include "camera.h"
 
+
+#define MAX_LIMIT 10
+
 // Initialize camera
 // Called while parsing scene file
 //
@@ -64,12 +67,16 @@ Ray Camera::generateRay (const double i, const double j)
 // Color calculations for given pixel
 //
 Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
-                         std::vector<Surface *>& surfaces) 
+                         std::vector<Surface *>& surfaces, int limit)
 
 {
+    limit++;
     Vector rgb(0., 0., 0.);
     Intersection it;
     Material *m = NULL;
+
+    if (limit == MAX_LIMIT) 
+        return rgb;
 
     // iterate through each surface for intersection
     for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
@@ -119,6 +126,18 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
 
             }
         }
+        if (m->ideal.length()) {
+            Vector n = it.n;
+            Vector rDir = ray.d - 2 * dot(ray.d, n) * n;
+            Ray rRay = Ray (it.p, rDir);
+
+            Vector ref = setColor (rRay, lights, surfaces, limit);
+
+            rgb[0] += ref[0] * m->ideal[0];
+            rgb[1] += ref[1] * m->ideal[1];
+            rgb[2] += ref[2] * m->ideal[2];
+        }
+        
     }
 
     return rgb;
@@ -131,7 +150,7 @@ void Camera::renderScene (std::vector<Light *>& lights,
 {
     std::cout << "rendering..." << std::endl;
     int pixnum = pheight * pwidth;
-    pixnum /= 100
+    pixnum /= 10;
     int n = 0;
 
     // only one light for now
@@ -147,7 +166,7 @@ void Camera::renderScene (std::vector<Light *>& lights,
 
             // color calculations
             Ray ray = generateRay(i, j);
-            rgb = setColor (ray, lights, surfaces);
+            rgb = setColor (ray, lights, surfaces, 0);
 
             setPixel (i, j, rgb.x, rgb.y, rgb.z);
         }

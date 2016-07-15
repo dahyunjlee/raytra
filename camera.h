@@ -28,7 +28,7 @@ public:
     Ray generateRay (const double i, const double j);
 
     Vector setColor (Ray& ray, std::vector<Light *>& lights,
-                     std::vector<Surface *>& surfaces);
+                     std::vector<Surface *>& surfaces, int limit);
 
     void renderScene (std::vector<Light *>&lights,
                       std::vector<Surface *>& surfaces);
