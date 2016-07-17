@@ -15,7 +15,7 @@ BBox Union (const BBox &b1, const BBox &b2) {
     return b;
 }
 
-BBox Union (const BBox &b1, const Point &p1) {
+BBox Union (const BBox &b1, const Point &p) {
     BBox b;
     b.min.x = fmin(b1.min.x, p.x);
     b.min.y = fmin(b1.min.y, p.y);
@@ -93,7 +93,7 @@ bool BBox::intersect(const Ray &ray, Intersection &it) {
         else if (ray.o.z > max.z)
             tzmin = tzmax = -INFINITY;
         else {
-            tzin = -INFINITY;
+            tzmin = -INFINITY;
             tzmax = INFINITY;
         }
     }

@@ -6,6 +6,9 @@
 
 bool Sphere::intersect(const Ray& ray, Intersection& it) {
 
+    if (!bbox.intersect(ray, it))
+        return false;
+
     // terms used often in equation
     Vector v (ray.o - this->o);
     double d_dot_d = dot(ray.d, ray.d);
@@ -33,6 +36,9 @@ bool Sphere::intersect(const Ray& ray, Intersection& it) {
 }
 
 bool Triangle::intersect(const Ray& ray, Intersection& it) {
+
+    if (!bbox.intersect(ray, it)) 
+        return false;
 
     // area of triangle
     //

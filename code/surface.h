@@ -8,6 +8,7 @@
 #include "ray.h"
 #include "intersection.h"
 #include "material.h"
+#include "bbox.h"
 
 class Surface {
 
@@ -19,6 +20,7 @@ public:
         material = m;
     }
 
+    BBox bbox;
     Material* material;
 
 };

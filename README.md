@@ -10,6 +10,7 @@ Simple raytracing renderer that reads in a scene file and outputs a photorealist
 
 ####How to compile and run
 On mac, compile using this command:
+
 ```g++ -g *.cc -I. -I/usr/local/include/OpenEXR -L/usr/local/lib -lIlmImf -lImath -lHalf -o raytra```
 
 Run by typing in Terminal:

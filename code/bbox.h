@@ -6,7 +6,7 @@
 #define BBOX_H_
 
 #include "geometry.h"
-#include "material.h"
+#include "ray.h"
 #include "intersection.h"
 
 const double eps = 0.001;
@@ -32,13 +32,13 @@ public:
         max = Point(fmax(p1.x, p2.x), fmin(p1.y, p2.y), fmax(p1.z, p2.z));
     }
 
-    void expand (const float f) {
-        min = (min.x - f, min.y - f, min.z - f);
-        max = (max.x + f, max.y + f, max.z = f);
+    void expand (const double delta) {
+        min -= Vector (delta, delta, delta);
+        max += Vector (delta, delta, delta);
     }
 
     friend BBox Union (const BBox &b1, const BBox &b2);
-    friend BBox Union (const BBox &b1, const Point &p1);
+    friend BBox Union (const BBox &b1, const Point &p);
     
     bool intersect(const Ray &ray, Intersection &it);
 
