@@ -157,7 +157,10 @@ void Parser::read_wavefront_file (
     tris.clear();
     verts.clear();
 
-    ifstream in(file);
+    string path ("../scenefiles/");
+    path+=file;
+
+    ifstream in(path);
     char buffer[1025];
     string cmd;
 

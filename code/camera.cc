@@ -67,7 +67,8 @@ Ray Camera::generateRay (const double i, const double j)
 // Color calculations for given pixel
 //
 Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
-                         std::vector<Surface *>& surfaces, int limit)
+                         std::vector<Surface *>& surfaces, 
+                         int limit, BVHNode *root)
 
 {
     limit++;
@@ -78,18 +79,29 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
     if (limit == MAX_LIMIT) 
         return rgb;
 
-    // iterate through each surface for intersection
-    for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
-        Intersection i;
-        Surface *surf = surfaces[surfnum];
-        if (surf->intersect(ray, i)) {
-            if (i.t > 0.0001 && i.t < it.t) {
-                it = i;
-                m = surf->material;
+
+    if (root) {
+        if (root->intersect(ray, it) && it.id != -1){
+            m = surfaces[it.id]->material;
+            cout<<"it";
+        }
+    }
+    else {
+        // iterate through each surface for intersection
+        for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
+            Intersection i;
+            Surface *surf = surfaces[surfnum];
+            if (surf->intersect(ray, i)) {
+                if (i.t > 0.0001 && i.t < it.t) {
+                    it = i;
+                    m = surf->material;
+                }
             }
         }
     }
+
     if (m) {
+        cout<<"m";
         // Intersection info
         Point p = it.p;
         Vector n = it.n;
@@ -112,26 +124,41 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
                 Ray shadowRay = Ray(p, l);
                 bool isShadow = false;
 
-                for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
-                    Intersection i;
-                    Surface *s = surfaces[surfnum];
-                    if (s->intersect(shadowRay, i)) {
-                        if (i.t > 0.0001 && i.t < dist) 
-                            isShadow = true;
+                if (root) {
+                    if (root->shadowTest(shadowRay, it) && it.t < dist)
+                        isShadow = true;
+                }
+                else {
+
+                    for (int surfnum = 0; surfnum < surfaces.size(); ++surfnum) {
+                        Intersection i;
+                        Surface *s = surfaces[surfnum];
+                        if (s->intersect(shadowRay, i)) {
+                            if (i.t > 0.0001 && i.t < dist) 
+                                isShadow = true;
+                        }
                     }
                 }
 
                 if (!isShadow)
                     rgb += m -> phongShading (l, v, n, light->color);
+            }
 
+            // if Ambient light
+            if (light->type == 2)  {
+            }
+
+            // if Area light
+            if (light->type == 3) {
             }
         }
+
         if (m->ideal.length()) {
             Vector n = it.n;
             Vector rDir = ray.d - 2 * dot(ray.d, n) * n;
             Ray rRay = Ray (it.p, rDir);
 
-            Vector ref = setColor (rRay, lights, surfaces, limit);
+            Vector ref = setColor (rRay, lights, surfaces, limit, root);
 
             rgb[0] += ref[0] * m->ideal[0];
             rgb[1] += ref[1] * m->ideal[1];
@@ -146,7 +173,8 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
 // Iterate through each pixel
 //
 void Camera::renderScene (std::vector<Light *>& lights,
-                          std::vector<Surface *>& surfaces)
+                          std::vector<Surface *>& surfaces,
+                          BVHNode *root)
 {
     std::cout << "rendering..." << std::endl;
     int pixnum = pheight * pwidth;
@@ -166,7 +194,7 @@ void Camera::renderScene (std::vector<Light *>& lights,
 
             // color calculations
             Ray ray = generateRay(i, j);
-            rgb = setColor (ray, lights, surfaces, 0);
+            rgb = setColor (ray, lights, surfaces, 0, root);
 
             setPixel (i, j, rgb.x, rgb.y, rgb.z);
         }

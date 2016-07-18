@@ -28,9 +28,13 @@ public:
 class Sphere : public Surface {
 
 public:
-    Sphere (Point oo, double rr) : o(oo), r(rr) {}
+    Sphere (Point oo, double rr) : o(oo), r(rr) {
+        bbox = BBox(Point(o.x-r, o.y-r, o.z-r), Point(o.x+r, o.y+r, o.z+r));
+    }
     Sphere (double x, double y, double z, double rr)
-        : o(x, y, z), r(rr) {}
+        : o(x, y, z), r(rr) {
+        bbox = BBox(Point(x-rr, y-rr, z-rr), Point(x+rr, y+rr, z+rr));
+    }
     
     virtual ~Sphere() {}
 
@@ -51,6 +55,9 @@ public:
         Vector u = p2 - p1;
         Vector v = p3 - p1;
         norm = cross(u, v);
+        bbox = BBox(p1, p2);
+        bbox = Union(bbox, p3);
+        bbox.expand(0.00000001);
     }
     virtual ~Triangle() {}
 

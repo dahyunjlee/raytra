@@ -10,13 +10,14 @@
 class Intersection {
 public:
 
-    Intersection() {t = INFINITY; Point p; Vector n;}
+    Intersection() {t = INFINITY; Point p; Vector n; id = -1;}
 
     // Intersection public data
     //
     Point p;
     Vector n;
     double t;
+    int id;
 
 };
 

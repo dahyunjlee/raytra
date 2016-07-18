@@ -28,7 +28,11 @@ int main (int argc, const char** argv)
     Parser parser;
     parser.parse (argv[1], surfaces, lights, materials, cam);
 
-    cam.renderScene(lights, surfaces);
+
+    BVHNode *BVHTree = NULL;
+    BVHTree = new BVHNode (surfaces, 0, (int)surfaces.size() - 1, 0);
+
+    cam.renderScene(lights, surfaces, BVHTree);
     cam.writeImage(argv[2]);
 
     double duration = (clock()-start) / (double) CLOCKS_PER_SEC;

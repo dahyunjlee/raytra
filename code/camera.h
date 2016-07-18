@@ -11,6 +11,7 @@
 #include "intersection.h"
 #include "surface.h"
 #include "light.h"
+#include "bvh.h"
 
 #include <ImfRgbaFile.h>
 #include <ImfStringAttribute.h>
@@ -28,10 +29,11 @@ public:
     Ray generateRay (const double i, const double j);
 
     Vector setColor (Ray& ray, std::vector<Light *>& lights,
-                     std::vector<Surface *>& surfaces, int limit);
+                     std::vector<Surface *>& surfaces, int limit, BVHNode *root);
 
     void renderScene (std::vector<Light *>&lights,
-                      std::vector<Surface *>& surfaces);
+                      std::vector<Surface *>& surfaces,
+                      BVHNode *root = NULL);
 
     void writeImage (const char *sceneFile);
 

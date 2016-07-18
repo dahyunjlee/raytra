@@ -9,7 +9,7 @@
 #include <algorithm>
 #include "surface.h"
 
-const double e = 0.0001;
+const double e = 0.00001;
 
 using namespace std;
 

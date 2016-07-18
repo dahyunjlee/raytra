@@ -1,5 +1,4 @@
-// 
-// bvh.cc
+// // bvh.cc
 //
 
 #include "bvh.h"
@@ -19,13 +18,16 @@ BVHNode::BVHNode(vector <Surface*> &objects, int l, int r, int axis) {
     // leaf level-- surfaces are on left child 
     if (l==r) {
         left = objects[l];
+        left->bbox.id = l;
         right = NULL;
     }
     else if (l < r) {
         surround (objects, l, r);
         if (r == l + 1) {
             left = objects[l];
+            left->bbox.id = l;
             right = objects[r];
+            right->bbox.id = r;
         }
         else {
             int mid = l + (r-l)/2;
@@ -79,12 +81,14 @@ bool BVHNode::intersect(const Ray &ray, Intersection &it) {
             return true;
     }
     else if (bbox.intersect(ray, it)) {
+        cout<<"bboxhit";
         Intersection l, r;
         bool lhit = left->intersect(ray, l) && l.t > e;
         bool rhit = right->intersect(ray, r) && r.t > e;
         if (!lhit && !rhit)
             return false;
         else {
+            cout<<"hit"<<endl;
             // find closest intersection
             if (lhit && rhit) {
                 if (l.t < r.t)

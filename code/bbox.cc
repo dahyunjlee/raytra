@@ -120,11 +120,13 @@ bool BBox::intersect(const Ray &ray, Intersection &it) {
     tfar = fmin (txmax, fmin (tymax, tzmax));
 
     if (tnear > tfar) return false;     // no intersection
-    if (tfar < 0) return false;         // box behind ray
+//    if (tfar < 0) return false;         // box behind ray
 
     it.t = tnear;
     it.p = ray.o + ray.d * tnear;
     it.n = n;
+    if (id != -1)
+        it.id = id;
 
     return true;
 }
