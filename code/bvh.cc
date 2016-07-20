@@ -81,14 +81,12 @@ bool BVHNode::intersect(const Ray &ray, Intersection &it) {
             return true;
     }
     else if (bbox.intersect(ray, it)) {
-        cout<<"bboxhit";
         Intersection l, r;
         bool lhit = left->intersect(ray, l) && l.t > e;
         bool rhit = right->intersect(ray, r) && r.t > e;
         if (!lhit && !rhit)
             return false;
         else {
-            cout<<"hit"<<endl;
             // find closest intersection
             if (lhit && rhit) {
                 if (l.t < r.t)

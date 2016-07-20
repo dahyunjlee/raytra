@@ -83,7 +83,6 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
     if (root) {
         if (root->intersect(ray, it) && it.id != -1){
             m = surfaces[it.id]->material;
-            cout<<"it";
         }
     }
     else {
@@ -101,7 +100,6 @@ Vector Camera::setColor (Ray& ray, std::vector<Light *>& lights,
     }
 
     if (m) {
-        cout<<"m";
         // Intersection info
         Point p = it.p;
         Vector n = it.n;

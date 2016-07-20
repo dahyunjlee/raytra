@@ -45,6 +45,11 @@ public:
     
     bool intersect(const Ray &ray, Intersection &it);
 
+    double size() {
+        Vector v = max - min;
+        return v.length();
+    }
+
 
     // bbox data
     //

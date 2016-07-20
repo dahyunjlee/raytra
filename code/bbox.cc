@@ -42,7 +42,7 @@ bool BBox::intersect(const Ray &ray, Intersection &it) {
         }
     }
     else {
-        d = 1/ray.d.z;  // sign matters to find intersection with nearer plane
+        d = 1/ray.d.x;  // sign matters to find intersection with nearer plane
         if (d >= 0) {
             txmin = d*(this->min.x - ray.o.x);
             txmax = d*(this->max.x - ray.o.x);
@@ -79,7 +79,7 @@ bool BBox::intersect(const Ray &ray, Intersection &it) {
         }
         else {
             tymin = d*(this->max.y - ray.o.y);
-            tymax = d*(this->max.x - ray.o.y);
+            tymax = d*(this->min.y - ray.o.y);
             if (tymin > tnear) {
                 tnear = tymin;
                 n = Vector (0, 1, 0);
