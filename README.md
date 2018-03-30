@@ -8,6 +8,7 @@ Simple raytracing renderer that reads in a scene file and outputs a photorealist
 * Plane
 * .obj files
 
+
 ### How to compile and run
 On mac, compile using this command:
 
@@ -16,5 +17,12 @@ On mac, compile using this command:
 Run by typing in Terminal:
 ```./raytra [scenefile_name.txt] [output_file_name.exr]```
 
-### Sample Images:
 
+### Sample Images:
+![Alt text](./cg_11.png?raw=true "Title")
+![Alt text](./cg_11.png?raw=true "Title")
+
+
+b33_.png	Add files via upload	just now
+cg_11.png	Add files via upload	just now
+st33.png
