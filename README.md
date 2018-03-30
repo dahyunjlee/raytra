@@ -15,3 +15,6 @@ On mac, compile using this command:
 
 Run by typing in Terminal:
 ```./raytra [scenefile_name.txt] [output_file_name.exr]```
+
+###Sample Images:
+
