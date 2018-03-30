@@ -20,9 +20,5 @@ Run by typing in Terminal:
 
 ### Sample Images:
 ![Alt text](./cg_11.png?raw=true "Title")
-![Alt text](./cg_11.png?raw=true "Title")
-
-
-b33_.png	Add files via upload	just now
-cg_11.png	Add files via upload	just now
-st33.png
+![Alt text](./b33_.png?raw=true "Title")
+![Alt text](./st33.png.png?raw=true "Title")
