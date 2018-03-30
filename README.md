@@ -21,4 +21,4 @@ Run by typing in Terminal:
 ### Sample Images:
 ![Alt text](./cg_11.png?raw=true "Title")
 ![Alt text](./b33_.png?raw=true "Title")
-![Alt text](./st33.png.png?raw=true "Title")
+![Alt text](./st33.png?raw=true "Title")
