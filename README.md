@@ -7,6 +7,7 @@ Simple raytracing renderer that reads in a scene file and outputs a photorealist
 * Triangle
 * Plane
 * .obj files
+Input file format shown in test files.
 
 
 ### How to compile and run
