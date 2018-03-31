@@ -22,3 +22,5 @@ Run by typing in Terminal:
 ![Alt text](./cg_11.png?raw=true "Title")
 ![Alt text](./b33_.png?raw=true "Title")
 ![Alt text](./st33.png?raw=true "Title")
+
+Note: Many parts of the code are starter code provided by the Computer Graphics Course at Columbia University. 
